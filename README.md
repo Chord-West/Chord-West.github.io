@@ -1,16 +1,29 @@
-# 김현서 개발자 포트폴리오
+# 김현서 · Developer Portfolio
 
-React · iOS · Spring 기반 웹·앱·서버 개발 경험을 소개하는 정적 포트폴리오입니다.
+React · iOS · Spring으로 화면·API·운영을 연결한 개발 경험을 소개합니다.
 
-## GitHub Pages 배포
+공개 사이트: https://chord-west.github.io/
 
-1. GitHub에서 공개 저장소 `Chord-West.github.io`를 생성합니다.
-2. 이 폴더의 `index.html`, `style.css`, `script.js`, `.nojekyll`, 이미지 파일 3개를 저장소 루트에 올립니다. 상위 폴더 전체를 올리지 않습니다.
-3. 저장소 Settings → Pages → Build and deployment에서 Source를 `Deploy from a branch`, Branch를 `main`, 폴더를 `/(root)`로 선택하고 Save를 누릅니다.
-4. 배포 완료 후 https://chord-west.github.io/ 에서 확인합니다.
+## 구성
 
-연락처는 제공되지 않아 GitHub 프로필로 연결했습니다. 경력 내용은 index.html, 디자인은 style.css에서 수정할 수 있습니다. 별도의 빌드 과정은 없습니다.
+- 소개: 현대퓨처넷 경력과 핵심 개발 역량
+- 대표 사례: PLAYLOOP / 통합 계정·더현대 Hi / MMP·AI 마케팅
+- 실서비스: 현대백화점 앱 실제 화면 4종
+- 개발 기반: React WebView / H-Apps / H-WAS / 푸시 데이터 정합성
+- 경력·기술·학력 및 자격
 
-## 로컬 미리보기
+프로젝트마다 문제, 담당 역할, 설계 판단, 결과를 같은 순서로 정리했습니다. 이미지 확대와 이전·다음 탐색, 모바일 메뉴, 인쇄 기능을 지원합니다. 별도 빌드 없이 GitHub Pages에서 동작합니다.
 
-이 디렉터리에서 `python3 -m http.server 8765` 실행 후 http://localhost:8765 로 접속합니다.
+## 수정
+
+- 내용: `index.html`
+- 디자인·반응형: `style.css`
+- 메뉴·이미지 확대: `script.js`
+- 제공된 포트폴리오에서 추출한 이미지: 각 `.jpg`
+- 제공된 HTML의 한글 폰트: `portfolio.woff`
+
+GitHub Pages 설정: main 브랜치 / 루트 폴더.
+
+## 로컬 확인
+
+이 폴더에서 `python3 -m http.server 8765`를 실행한 뒤 http://localhost:8765 에 접속합니다.
