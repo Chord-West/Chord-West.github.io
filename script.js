@@ -22,15 +22,6 @@ dialog.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'){event.prev
 dialog.addEventListener('close',()=>{if(trigger)trigger.focus({preventScroll:true});});
 document.querySelector('.print-button').addEventListener('click',()=>window.print());
 
-const viewButtons=[...document.querySelectorAll('[data-view]')];
-viewButtons.forEach(button=>button.addEventListener('click',()=>{
- const operator=button.dataset.view==='operator';
- viewButtons.forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
- document.querySelector('.customer-view').hidden=operator;
- document.querySelector('.operator-view').hidden=!operator;
- document.querySelector('#service-title').textContent=operator?'Swell 캠페인 제작 어드민':'현대백화점 앱과 PLAYLOOP';
- document.querySelector('.service-description').textContent=operator?'설정부터 AI 소재 생성, 미리보기와 게시까지':'고객이 이용하는 앱과 캠페인 화면';
-}));
 document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{
  const target=document.querySelector(link.getAttribute('href'));
  if(target?.matches('details'))target.open=true;
