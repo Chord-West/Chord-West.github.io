@@ -20,7 +20,10 @@ dialog.querySelector('.lightbox-next').addEventListener('click',()=>showImage(cu
 dialog.addEventListener('click',event=>{if(event.target===dialog||event.target.classList.contains('lightbox-content'))dialog.close();});
 dialog.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'){event.preventDefault();showImage(current-1);}if(event.key==='ArrowRight'){event.preventDefault();showImage(current+1);}});
 dialog.addEventListener('close',()=>{if(trigger)trigger.focus({preventScroll:true});});
-document.querySelector('.print-button').addEventListener('click',()=>window.print());
+document.querySelectorAll('.print-button').forEach(b=>b.addEventListener('click',()=>window.print()));
+let folded=[];
+window.addEventListener('beforeprint',()=>{folded=[...document.querySelectorAll('details.project:not([open])')]; folded.forEach(p=>p.open=true);});
+window.addEventListener('afterprint',()=>{folded.forEach(p=>p.open=false);folded=[];});
 
 document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{
  const target=document.querySelector(link.getAttribute('href'));
