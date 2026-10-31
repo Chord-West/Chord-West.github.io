@@ -18,3 +18,8 @@ https://chord-west.github.io/
 별도 빌드가 필요 없는 정적 사이트입니다. GitHub Pages는 main 브랜치의 루트 폴더를 사용합니다.
 
 로컬 확인: 이 폴더에서 `python3 -m http.server 8765`를 실행하고 http://localhost:8765 에 접속합니다.
+
+
+## 목차
+
+About → Tech Stack → 경력 타임라인 → 주요 프로젝트 순서로 구성했습니다. 2022–2023년은 현대백화점 홈페이지 리뉴얼, H-Apps는 2025년 7–12월로 정리했습니다. 통합 인증, Mobile API Adapter, Spring Batch 통계 배치와 Kafka 장애 알림 사례를 포함합니다.
