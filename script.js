@@ -1,34 +1,89 @@
-const menu = document.querySelector('.menu');
-const nav = document.querySelector('nav');
-function closeMenu(){nav.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.setAttribute('aria-label','메뉴 열기');menu.textContent='메뉴';}
-menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'메뉴 닫기':'메뉴 열기');menu.textContent=open?'닫기':'메뉴';nav.classList.toggle('open',open);});
-nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeMenu));
-document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});
-if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){nav.querySelectorAll('a').forEach(link=>link.classList.toggle('active',link.getAttribute('href')==='#'+entry.target.id));}});},{rootMargin:'-12% 0px -65% 0px',threshold:0});document.querySelectorAll('main section[id]').forEach(section=>observer.observe(section));}
-const gallery=[...document.querySelectorAll('.image-zoom')];
-const dialog=document.querySelector('.lightbox');
-const enlarged=dialog.querySelector('img');
-const caption=document.querySelector('#lightbox-caption');
-const counter=dialog.querySelector('.lightbox-count');
-let current=0;
-let trigger=null;
-function showImage(index){current=(index+gallery.length)%gallery.length;const button=gallery[current];const original=button.querySelector('img');enlarged.src=original.src;enlarged.alt=original.alt;caption.textContent=button.dataset.caption;counter.textContent=`${current+1} / ${gallery.length}`;}
-gallery.forEach((button,index)=>button.addEventListener('click',()=>{trigger=button;showImage(index);dialog.showModal();}));
-dialog.querySelector('.lightbox-close').addEventListener('click',()=>dialog.close());
-dialog.querySelector('.lightbox-prev').addEventListener('click',()=>showImage(current-1));
-dialog.querySelector('.lightbox-next').addEventListener('click',()=>showImage(current+1));
-dialog.addEventListener('click',event=>{if(event.target===dialog||event.target.classList.contains('lightbox-content'))dialog.close();});
-dialog.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'){event.preventDefault();showImage(current-1);}if(event.key==='ArrowRight'){event.preventDefault();showImage(current+1);}});
-dialog.addEventListener('close',()=>{if(trigger)trigger.focus({preventScroll:true});});
-document.querySelectorAll('.print-button').forEach(b=>b.addEventListener('click',()=>window.print()));
-let folded=[];
-window.addEventListener('beforeprint',()=>{folded=[...document.querySelectorAll('details.project:not([open])')]; folded.forEach(p=>p.open=true);});
-window.addEventListener('afterprint',()=>{folded.forEach(p=>p.open=false);folded=[];});
+const navLinks = [...document.querySelectorAll('.masthead nav a')];
+const archive = document.getElementById('archive');
 
-document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{
- const target=document.querySelector(link.getAttribute('href'));
- if(target?.matches('details'))target.open=true;
+function trackSection() {
+  const threshold = document.querySelector('.masthead').offsetHeight + window.innerHeight * 0.22;
+  let current = '';
+  for (const link of navLinks) {
+    const section = document.getElementById(link.hash.slice(1));
+    if (section.getBoundingClientRect().top <= threshold) current = link.hash;
+  }
+  for (const link of navLinks) {
+    if (link.hash === current) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  }
+}
+
+let pendingFrame = false;
+function onScroll() {
+  if (pendingFrame) return;
+  pendingFrame = true;
+  requestAnimationFrame(() => {
+    trackSection();
+    pendingFrame = false;
+  });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+window.addEventListener('resize', onScroll);
+
+function openProject(hash) {
+  const target = document.getElementById(hash.slice(1));
+  if (target && target.matches('details.project')) target.open = true;
+}
+document.addEventListener('click', event => {
+  const link = event.target.closest('a[href^="#"]');
+  if (link) openProject(link.hash);
+});
+function followHash() {
+  openProject(location.hash);
+  trackSection();
+}
+window.addEventListener('hashchange', followHash);
+followHash();
+
+const gallery = [...document.querySelectorAll('.image-zoom')];
+const dialog = document.querySelector('.lightbox');
+const enlarged = dialog.querySelector('img');
+const caption = document.getElementById('lightbox-caption');
+const counter = dialog.querySelector('.lightbox-count');
+let currentImage = 0;
+let trigger;
+
+function showImage(index) {
+  currentImage = (index + gallery.length) % gallery.length;
+  const button = gallery[currentImage];
+  const image = button.querySelector('img');
+  enlarged.src = image.src;
+  enlarged.alt = image.alt;
+  caption.textContent = button.dataset.caption || image.alt;
+  counter.textContent = (currentImage + 1) + ' / ' + gallery.length;
+}
+gallery.forEach((button, index) => button.addEventListener('click', () => {
+  trigger = button;
+  showImage(index);
+  dialog.showModal();
 }));
+dialog.querySelector('.lightbox-close').addEventListener('click', () => dialog.close());
+dialog.querySelector('.lightbox-prev').addEventListener('click', () => showImage(currentImage - 1));
+dialog.querySelector('.lightbox-next').addEventListener('click', () => showImage(currentImage + 1));
+dialog.addEventListener('click', event => {
+  if (event.target === dialog || event.target.classList.contains('lightbox-content')) dialog.close();
+});
+dialog.addEventListener('keydown', event => {
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    event.preventDefault();
+    showImage(currentImage + (event.key === 'ArrowLeft' ? -1 : 1));
+  }
+});
+dialog.addEventListener('close', () => trigger?.focus({ preventScroll: true }));
 
-function openHashProject(){const id=decodeURIComponent(location.hash.slice(1));const target=document.getElementById(id);if(target?.matches('details'))target.open=true;}
-window.addEventListener('hashchange',openHashProject);openHashProject();
+let folded = [];
+window.addEventListener('beforeprint', () => {
+  folded = [...archive.querySelectorAll('details:not([open])')];
+  for (const project of folded) project.open = true;
+});
+window.addEventListener('afterprint', () => {
+  for (const project of folded) project.open = false;
+  folded = [];
+});
+document.querySelector('.print-button').addEventListener('click', () => window.print());
